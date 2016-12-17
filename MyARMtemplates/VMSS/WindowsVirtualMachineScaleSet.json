@@ -53,6 +53,7 @@
   },
   "variables": {
     "location": "[resourceGroup().location]", 
+    "scriptURL": "",
     "storageAccountType": "Standard_LRS",
     
     "namingInfix": "[toLower(resourceGroup().name)]",
@@ -277,6 +278,40 @@
           },
           "extensionProfile": {
             "extensions": [
+
+              {
+
+                "name": "customScript",
+
+                "properties": {
+
+                  "publisher": "Microsoft.Compute",
+
+                  "settings": {
+
+                    "fileUris": [
+
+                      "[concat(parameters('_artifactsLocation'), '/scripts/helloWorld.ps1')]"
+
+                    ]
+
+                  },
+
+                  "typeHandlerVersion": "1.8",
+
+                  "autoUpgradeMinorVersion": true,
+
+                  "protectedSettings": {
+
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File helloWorld.ps1"
+
+                  },
+
+                  "type": "CustomScriptExtension"
+
+                }
+
+              },
               {
                 "name": "AzureDiagnostics",
                 "properties": {
