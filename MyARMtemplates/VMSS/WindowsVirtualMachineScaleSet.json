@@ -54,7 +54,7 @@
   "variables": {
     "location": "[resourceGroup().location]",
     "storageAccountType": "Standard_LRS",
-    "longNamingInfix": "[toLower(parameters('vmssName'))]",
+    
     "namingInfix": "[toLower(resourceGroup().name)]",
     "newStorageAccountSuffix": "[concat(variables('namingInfix'), 'sa')]",
     "uniqueStringArray": [
@@ -146,7 +146,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(variables('longNamingInfix'),copyIndex())]"
+          "domainNameLabel": "[concat(variables('namingInfix'),copyIndex())]"
         }
       }
     },
