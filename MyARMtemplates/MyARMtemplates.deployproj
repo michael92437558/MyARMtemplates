@@ -40,6 +40,7 @@
     <None Include="MyConsoleVMs.param.json" />
     <None Include="SharedResource.json" />
     <None Include="SharedResource.param.dev.json" />
+    <None Include="VMSS\README.md" />
     <None Include="VMSS\WindowsVirtualMachineScaleSet.json" />
     <None Include="VMSS\WindowsVirtualMachineScaleSet.parameters.json" />
     <None Include="WinFTPStandalonevNetTemplate.json" />
