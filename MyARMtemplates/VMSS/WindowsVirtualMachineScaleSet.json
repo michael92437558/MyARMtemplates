@@ -4,8 +4,31 @@
   "parameters": {
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_A1",
-      "minLength": 1
+      "defaultValue": "Standard_A1_v2",
+      "allowedValues": [
+        "Standard_A1_v2",
+        "Standard_A2m_v2",
+        "Standard_A2_v2",
+        "Standard_A4m_v2",
+        "Standard_A4_v2",
+        "Standard_A8m_v2",
+        "Standard_A8_v2",
+        "Standard_D1_v2",
+        "Standard_D2_v2",
+        "Standard_D3_v2",
+        "Standard_D4_v2",
+        "Standard_D5_v2",
+        "Standard_D11_v2",
+        "Standard_D12_v2",
+        "Standard_D13_v2",
+        "Standard_D14_v2",
+        "Standard_D15_v2",
+        "Standard_F1",
+        "Standard_F2",
+        "Standard_F4",
+        "Standard_F8",
+        "Standard_F16"
+      ]
     },
     "windowsOSVersion": {
       "type": "string",
@@ -52,10 +75,10 @@
     }
   },
   "variables": {
-    "location": "[resourceGroup().location]", 
-    "scriptURL": "",
+    "location": "[resourceGroup().location]",
+    "scriptURL": "https://raw.githubusercontent.com/eissi/MyARMtemplates/master/MyARMtemplates/VMSS/install.ps1",
     "storageAccountType": "Standard_LRS",
-    
+
     "namingInfix": "[toLower(resourceGroup().name)]",
     "newStorageAccountSuffix": "[concat(variables('namingInfix'), 'sa')]",
     "uniqueStringArray": [
@@ -73,12 +96,12 @@
     "publicIPAddressName": "[concat(variables('namingInfix'), 'pip')]",
     "subnetName": "[concat(variables('namingInfix'), 'subnet')]",
     "loadBalancerName": "[concat(variables('namingInfix'), 'lb')]",
-    
+
     "natPoolName": "[concat(variables('namingInfix'), 'natpool')]",
     "bePoolName": "[concat(variables('namingInfix'), 'bepool')]",
     "nicName": "[concat(variables('namingInfix'), 'nic')]",
     "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
-    
+
     "osType": {
       "publisher": "MicrosoftWindowsServer",
       "offer": "WindowsServer",
@@ -278,39 +301,22 @@
           },
           "extensionProfile": {
             "extensions": [
-
               {
-
                 "name": "customScript",
-
                 "properties": {
-
                   "publisher": "Microsoft.Compute",
-
                   "settings": {
-
                     "fileUris": [
-
-                      "[concat(parameters('_artifactsLocation'), '/scripts/helloWorld.ps1')]"
-
+                      "[variables('scriptURL')]"
                     ]
-
                   },
-
                   "typeHandlerVersion": "1.8",
-
                   "autoUpgradeMinorVersion": true,
-
                   "protectedSettings": {
-
-                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File helloWorld.ps1"
-
+                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File install.ps1"
                   },
-
                   "type": "CustomScriptExtension"
-
                 }
-
               },
               {
                 "name": "AzureDiagnostics",
