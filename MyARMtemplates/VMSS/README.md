@@ -8,4 +8,4 @@
 </a>
 
 This template allows you to create hundreds of VMs using multiple VMSS in a single VNET.
-Your Resource Group name is used for a prefix of public IP domain name.
+##Your Resource Group name is used for a prefix of public IP domain name.
