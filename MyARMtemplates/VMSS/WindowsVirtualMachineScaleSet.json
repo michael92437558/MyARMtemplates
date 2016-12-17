@@ -52,7 +52,7 @@
     }
   },
   "variables": {
-    "location": "[resourceGroup().location]",
+    "location": "[resourceGroup().location]", 
     "storageAccountType": "Standard_LRS",
     
     "namingInfix": "[toLower(resourceGroup().name)]",
