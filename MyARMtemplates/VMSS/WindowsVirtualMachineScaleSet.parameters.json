@@ -2,19 +2,23 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vmssName": {
-            "value": "juleekorea"
-        },
+
         "instanceCount": {
-            "value": 3
+            "value": 1
         },
         "adminUsername": {
             "value": "julee"
         },
         "VMSSCount": {
-            "value": 3
+            "value": 1
         },
         "adminPassword": {
+            "value": "Passw0rdPassw0rd"
+        },
+        "ProgramURL": {
+            "value": "https://github.com/eissi/MyARMtemplates/blob/master/MyARMtemplates/VMSS/execution.zip?raw=true"
+        },
+        "ProgramURLSASkey": {
             "value": ""
         }
     }
