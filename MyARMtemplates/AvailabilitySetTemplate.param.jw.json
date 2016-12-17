@@ -1,0 +1,14 @@
+﻿{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Virtual Network": { "value": "AsiaJWVnet" },
+        "Subnet Name": {"value": "DMZ"},
+        "Location": {"value": "Japan West"},
+        "Number of VMs": { "value": 2 },
+        "VM set name": { "value": "alivetestjw" },
+        "VM Size": { "value": "Standard_A0" },
+        "Storage Account Name": { "value": "asiajwstoragejulee" },
+        "vmAdminPassword": {"value": "1234!@#$qwer"}
+    }
+}

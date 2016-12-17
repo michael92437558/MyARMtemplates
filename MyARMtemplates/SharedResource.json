@@ -1,0 +1,233 @@
+﻿{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "juleeasiahkstorageName": {
+            "type": "string"
+        },
+        "juleeasiahkstorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS"
+            ]
+        },
+        "juleejapanweststorageName": {
+            "type": "string"
+        },
+        "juleejapanweststorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS"
+            ]
+        },
+        "juleejapaneaststorageName": { 
+            "type": "string"
+        },
+        "juleejapaneaststorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS"
+            ]
+        },
+        "juleeuseaststorageName": {
+            "type": "string"
+        },
+        "juleeuseaststorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_ZRS"
+            ]
+        }
+    },
+    "variables": {
+        "AsiaHKVnetPrefix": "10.0.0.0/16",
+        "AsiaHKVnetSubnet1Name": "DMZ",
+        "AsiaHKVnetSubnet1Prefix": "10.0.0.0/24",
+        "AsiaHKVnetSubnet2Name": "Internal",
+        "AsiaHKVnetSubnet2Prefix": "10.0.1.0/24",
+        "AsiaJWVNetPrefix": "10.1.0.0/16",
+        "AsiaJWVNetSubnet1Name": "DMZ",
+        "AsiaJWVNetSubnet1Prefix": "10.1.0.0/24",
+        "AsiaJWVNetSubnet2Name": "Internal",
+        "AsiaJWVNetSubnet2Prefix": "10.1.1.0/24",
+        "AsiaJEVNetPrefix": "10.3.0.0/16",
+        "AsiaJEVNetSubnet1Name": "DMZ",
+        "AsiaJEVNetSubnet1Prefix": "10.3.0.0/24",
+        "AsiaJEVNetSubnet2Name": "Internal",
+        "AsiaJEVNetSubnet2Prefix": "10.3.1.0/24",
+        "USEastVNetPrefix": "10.2.0.0/16",
+        "USEastVNetSubnet1Name": "DMZ",
+        "USEastVNetSubnet1Prefix": "10.2.0.0/24",
+        "USEastVNetSubnet2Name": "Internal",
+        "USEastVNetSubnet2Prefix": "10.2.1.0/24"
+    },
+    "resources": [
+        {
+            "name": "AsiaHKVnet",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "East Asia",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('AsiaHKVnetPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('AsiaHKVnetSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('AsiaHKVnetSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('AsiaHKVnetSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('AsiaHKVnetSubnet2Prefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "AsiaJWVnet",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "Japan West",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('AsiaJWVNetPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('AsiaJWVNetSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('AsiaJWVNetSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('AsiaJWVNetSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('AsiaJWVNetSubnet2Prefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "AsiaJEVnet",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "Japan East",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('AsiaJEVNetPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('AsiaJEVNetSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('AsiaJEVNetSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('AsiaJEVNetSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('AsiaJEVNetSubnet2Prefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "USEastVnet",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "East US",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('USEastVNetPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('USEastVNetSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('USEastVNetSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('USEastVNetSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('USEastVNetSubnet2Prefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('juleeasiahkstorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "East Asia",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "properties": {
+                "accountType": "[parameters('juleeasiahkstorageType')]"
+            }
+        },
+        {
+            "name": "[parameters('juleejapanweststorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "Japan West",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "properties": {
+                "accountType": "[parameters('juleejapanweststorageType')]"
+            }
+        },
+        {
+            "name": "[parameters('juleejapaneaststorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "Japan east",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "properties": {
+                "accountType": "[parameters('juleejapaneaststorageType')]"
+            }
+        },
+        {
+            "name": "[parameters('juleeuseaststorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "East US",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "properties": {
+                "accountType": "[parameters('juleeuseaststorageType')]"
+            }
+        }
+
+    ],
+    "outputs": {
+    }
+}

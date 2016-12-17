@@ -1,0 +1,201 @@
+﻿{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VM set Name": {
+            "type": "string"
+        },
+        "Number of VMs": {
+            "type": "int",
+            "defaultValue": 2
+        },
+        "Virtual Network": {
+            "type": "string",
+            "allowedValues": [
+                "AsiaJWVnet",
+                "AsiaHKVnet",
+                "USEastVnet"
+            ],
+            "defaultValue": "AsiaJWVnet"
+        },
+        "Subnet Name": {
+            "type": "string",
+            "allowedValues": [
+                "DMZ",
+                "Internal"
+            ],
+            "defaultValue": "DMZ"
+        },
+        "Storage Account Name": {
+            "type": "string",
+            "allowedValues": [
+                "asiajwstoragejulee",
+                "asiahkstoragejulee",
+                "useaststoragejulee"
+            ],
+            "defaultValue": "asiajwstoragejulee"
+        },
+        "Location": {
+            "type": "string",
+            "allowedValues": [
+                "Japan West",
+                "East Asia",
+                "US East"
+            ],
+            "defaultValue": "Japan West"
+        },
+        "vmAdminUserName": {
+            "type": "string",
+            "defaultValue": "julee"
+        },
+        "vmAdminPassword": {
+            "type": "securestring"
+        },
+        "vmWindowsOSVersion": {
+            "type": "string",
+            "defaultValue": "2012-R2-Datacenter",
+            "allowedValues": [
+                "2008-R2-SP1",
+                "2012-Datacenter",
+                "2012-R2-Datacenter",
+                "Windows-Server-Technical-Preview"
+            ]
+        },
+        "VM Size": {
+            "type": "string",
+            "allowedValues": [
+                "Standard_D1",
+                "Standard_D2",
+                "Standard_A0",
+                "Standard_A1"
+            ],
+            "defaultValue": "Standard_A0"
+        }
+
+    },
+    "variables": {
+        "NIC-AS-VMsVnetID": "[resourceId('SharedResource','Microsoft.Network/virtualNetworks', parameters('Virtual Network'))]",
+        "NIC-AS-VMsSubnetRef": "[concat(variables('NIC-AS-VMsVnetID'),'/subnets/', parameters('Subnet Name'))]",
+        "vmImagePublisher": "MicrosoftWindowsServer",
+        "vmImageOffer": "WindowsServer",
+        "vmOSDiskName": "vmOSDisk",
+        "VSpublicIPName": "VSpublicIP"
+
+    },
+    "resources": [
+
+        {
+            "name": "[concat('NIC-',parameters('VM set Name'),'-',copyindex(1))]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[parameters('Location')]",
+            "apiVersion": "2015-05-01-preview",
+            "tags": {
+                "displayName": "[parameters('VM set Name')]"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('NIC-AS-VMsSubnetRef')]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat('publicIP',copyindex(1)))]"
+                            }
+                        }
+                    }
+                ]
+            },
+            "copy": {
+                "name": "NIC copy",
+                "count": "[parameters('Number of VMs')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', 'publicIP',copyindex(1))]"
+            ]
+
+        },
+        {
+            "name": "[concat('VS-',parameters('VM set Name'))]",
+            "type": "Microsoft.Compute/availabilitySets",
+            "location": "[parameters('Location')]",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "[parameters('VM set Name')]"
+            }
+        },
+        {
+            "name": "[concat('VM-',parameters('VM set Name'),'-',copyindex(1))]",
+            "copy": {
+                "name": "VM copy",
+                "count": "[parameters('Number of VMs')]"
+            },
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[parameters('Location')]",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', concat('NIC-',parameters('VM set Name'),'-',copyindex(1)))]"
+            ],
+            "tags": {
+                "displayName": "[parameters('VM set Name')]"
+            },
+
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', concat('VS-',parameters('VM set Name')))]"
+                },
+
+                "hardwareProfile": {
+                    "vmSize": "[parameters('VM Size')]"
+                },
+                "osProfile": {
+                    "computername": "[concat(parameters('VM set Name'),copyindex(1))]",
+                    "adminUsername": "[parameters('vmAdminUsername')]",
+                    "adminPassword": "[parameters('vmAdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('vmImagePublisher')]",
+                        "offer": "[variables('vmImageOffer')]",
+                        "sku": "[parameters('vmWindowsOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "vmOSDisk",
+                        "vhd": {
+                            "uri": "[concat('http://', parameters('Storage Account Name'), '.blob.core.windows.net/vhds/', parameters('VM set Name'),copyindex(1), '-OSdisk.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('NIC-',parameters('VM set Name'),'-',copyindex(1)))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "apiVersion": "2015-05-01-preview",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[concat('publicIP', copyIndex(1))]",
+            "location": "[parameters('location')]",
+            "copy": {
+                "name": "publicIPLoop",
+                "count": "[parameters('number of VMs')]"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic"
+            }
+        }
+
+    ],
+    "outputs": {
+    }
+}

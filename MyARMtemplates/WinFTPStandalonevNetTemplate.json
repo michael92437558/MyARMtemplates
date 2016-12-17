@@ -1,0 +1,208 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "FTPnetworkLocation": {
+      "type": "string",
+      "defaultValue": "Japan West"
+    },
+    "ftpipaddressDnsName": {
+      "type": "string",
+      "defaultValue": "myftpjulee"
+    },
+    "ftpvmstorageName": {
+      "type": "string",
+      "defaultValue": "ftpvmjulee"
+    },
+
+    "ftpvmName": {
+      "type": "string",
+      "defaultValue": "myftp"
+    },
+    "ftpvmAdminUserName": {
+      "type": "string",
+      "defaultValue": "ftpadmin"
+    },
+    "ftpvmAdminPassword": {
+      "type": "securestring"
+    },
+
+
+
+  },
+  "variables": {
+    "FTPnetworkPrefix": "10.0.0.0/16",
+    "FTPnetworkSubnet1Name": "DMZ",
+    "FTPnetworkSubnet1Prefix": "10.0.0.0/24",
+    "FTPnetworkSubnet2Name": "Internal",
+    "FTPnetworkSubnet2Prefix": "10.0.1.0/24",
+    "FTPNic1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'FTPnetwork')]",
+    "FTPNic1SubnetRef": "[concat(variables('FTPNic1VnetID'),'/subnets/', variables('FTPnetworkSubnet1Name'))]",
+    "FTPNic1Name": "ftpnic1",
+    "ftpvmstorageType": "Standard_LRS",
+    "ftpipaddressName": "ftpipaddress",
+    "ftpvmImagePublisher": "MicrosoftWindowsServer",
+    "ftpvmImageOffer": "WindowsServer",
+    "ftpvmOSDiskName": "ftpvmOSDisk",
+    "ftpvmVmSize": "Standard_D1",
+    "ftpvmVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'FTPnetwork')]",
+    "ftpvmSubnetRef": "[concat(variables('ftpvmVnetID'), '/subnets/', variables('FTPnetworkSubnet1Name'))]",
+    "ftpvmStorageAccountContainerName": "vhds",
+    "ftpvmWindowsOSVersion": "2012-R2-Datacenter"
+  },
+  "resources": [
+    {
+      "name": "FTPnetwork",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[parameters('FTPnetworkLocation')]",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "FTPnetwork"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('FTPnetworkPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('FTPnetworkSubnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('FTPnetworkSubnet1Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('FTPnetworkSubnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('FTPnetworkSubnet2Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('FTPNic1Name')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[parameters('FTPnetworkLocation')]",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', 'FTPnetwork')]",
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('ftpipaddressName'))]"
+      ],
+      "tags": {
+        "displayName": "FTPNic1"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('FTPNic1SubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ftpipaddressName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('ftpipaddressName')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[parameters('FTPnetworkLocation')]",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "ftpipaddress"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('ftpipaddressDnsName')]"
+        }
+      }
+    },
+    {
+      "name": "[parameters('ftpvmstorageName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[parameters('FTPnetworkLocation')]",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "ftpvmstorage"
+      },
+      "properties": {
+        "accountType": "[variables('ftpvmstorageType')]"
+      }
+    },
+    {
+      "name": "[parameters('ftpvmName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[parameters('FTPnetworkLocation')]",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('ftpvmstorageName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('FTPNic1Name'))]",
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('ftpipaddressName'))]"
+      ],
+      "tags": {
+        "displayName": "ftpvm"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('ftpvmVmSize')]"
+        },
+        "osProfile": {
+          "computername": "[parameters('ftpvmName')]",
+          "adminUsername": "[parameters('ftpvmAdminUsername')]",
+          "adminPassword": "[parameters('ftpvmAdminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('ftpvmImagePublisher')]",
+            "offer": "[variables('ftpvmImageOffer')]",
+            "sku": "[variables('ftpvmWindowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "ftpvmOSDisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('ftpvmstorageName'), '.blob.core.windows.net/', variables('ftpvmStorageAccountContainerName'), '/', variables('ftpvmOSDiskName'), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('FTPNic1Name'))]"
+            }
+          ]
+        }
+      }
+    }
+
+
+
+  ],
+  "outputs": {
+    "First Subnet Name": {
+      "value": "[reference('Microsoft.Network/virtualNetworks/FTPnetwork').subnets[0].name]",
+      "type": "string"
+    },
+    "FTP IP address": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/',variables('ftpipaddressName'))).ipAddress]"
+    },
+    "FTP FQDN": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/',variables('ftpipaddressName'))).dnssettings.fqdn]"
+    }
+  }
+}

@@ -1,0 +1,102 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "jw-sqlsvrjuleeName": {
+      "type": "string"
+    },
+    "jw-sqlsvrjuleeLocation": {
+      "type": "string"
+    },
+    "jw-sqlsvrjuleeAdminLogin": {
+      "type": "string"
+    },
+    "jw-sqlsvrjuleeAdminLoginPassword": {
+      "type": "securestring"
+    },
+    "jw-sqldbjuleeName": {
+      "type": "string"
+    },
+    "jw-sqldbjuleeCollation": {
+      "type": "string",
+      "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+    },
+    "jw-sqldbjuleeEdition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Business",
+        "Premium",
+        "Standard",
+        "Web"
+      ]
+    },
+    "requestedServiceObjectiveName": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "metadata": {
+        "description": "The name corresponding to the performance level for edition. The available options are: Shared, Basic, S0, S1, S2, S3, P1, P2, and P3."
+      }
+    },
+    "jw-sqlelasticpoolsjuleeName": {
+      "type": "string",
+      "defaultValue": "jwsqlelasticspool"
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "name": "[parameters('jw-sqlsvrjuleeName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[parameters('jw-sqlsvrjuleeLocation')]",
+      "apiVersion": "2014-04-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "jw-sqlsvrjulee"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('jw-sqlsvrjuleeAdminLogin')]",
+        "administratorLoginPassword": "[parameters('jw-sqlsvrjuleeAdminLoginPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+        {
+          "name": "AllowAllWindowsAzureIps",
+          "type": "firewallrules",
+          "location": "[parameters('jw-sqlsvrjuleeLocation')]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('jw-sqlsvrjuleeName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          }
+        },
+
+                {
+          "name": "[parameters('jw-sqldbjuleeName')]",
+          "type": "databases",
+          "location": "[parameters('jw-sqlsvrjuleeLocation')]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[parameters('jw-sqlsvrjuleeName')]"
+          ],
+          "tags": {
+            "displayName": "jw-sqldbjulee"
+          },
+          "properties": {
+            "collation": "[parameters('jw-sqldbjuleeCollation')]",
+            "edition": "[parameters('jw-sqldbjuleeEdition')]",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[parameters('requestedServiceObjectiveName')]"
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {
+  }
+}

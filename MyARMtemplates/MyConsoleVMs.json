@@ -1,0 +1,252 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Virtual Machine"
+      }
+    },
+    "adminUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "UserName for the Virtual Machine"
+      }
+    },
+    "dnsNameForPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+      }
+    },
+    "dnsNameForPublicIPLinux": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "Japan East"
+    },
+    "osType": {
+      "type": "string",
+      "allowedValues": [
+        "windows",
+        "linux"
+      ],
+      "metadata": {
+        "description": "This is the OS that your VM will be running"
+      }
+    },
+    "userDiskVhdName": {
+      "type": "string",
+      "metadata": {
+        "description": "This is the name of the your customized VHD"
+      }
+    },
+    "userImageStorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "This is the name of the your storage account"
+      }
+    },
+    "userImageStorageContainerName": {
+      "type": "string",
+      "metadata": {
+        "description": "This is the name of the container in your storage account"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "This is the size of your VM"
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('publicIPAddressNameLinux')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsNameForPublicIPLinux')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('publicIPAddressName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('nicName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
+              },
+
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressNamelinux'))]"
+      ],
+      "location": "[parameters('location')]",
+      "name": "[variables('nicNamelinux')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressNamelinux'))]"
+              },
+
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      },
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicNamelinux'))]"
+      ],
+      "location": "[parameters('location')]",
+      "name": "[variables('vmNamelinux')]",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicNamelinux'))]"
+            }
+          ]
+        },
+        "osProfile": {
+          "computername": "[variables('vmNamelinux')]",
+          "adminUsername": "[parameters('AdminUsername')]",
+          "adminPassword": "[parameters('AdminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('ubuntuImagePublisher')]",
+            "offer": "[variables('ubuntuImageOffer')]",
+            "sku": "[variables('ubuntuimagesku')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "vmOSDisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/vhds/', variables('vmNamelinux'), '-OSdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+
+        }
+      },
+      "type": "Microsoft.Compute/virtualMachines"
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+      ],
+      "location": "[parameters('location')]",
+      "name": "[variables('vmName')]",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "name": "[concat(variables('vmName'),'-osDisk')]",
+            "osType": "[parameters('osType')]",
+            "caching": "ReadWrite",
+            "createOption": "Attach",
+            "vhd": {
+              "uri": "[variables('osdiskuri')]"
+            }
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk1",
+              "lun": 0,
+              "vhd": {
+                "uri": "[variables('datadiskuri')]"
+              },
+              "createOption": "Attach"
+            }
+          ]
+        },
+
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+            }
+          ]
+        }
+      },
+      "type": "Microsoft.Compute/virtualMachines"
+    }
+  ],
+  "variables": {
+    "datadiskuri": "http://asiajestoragejulee.blob.core.windows.net/vhds/myusage-e-drive.vhd",
+    "nicName": "myUsageVMNic",
+    "nicNamelinux": "myUsagelinuxVMNic",
+    "osdiskuri": "http://asiajestoragejulee.blob.core.windows.net/vhds/myusage-c-drive.vhd",
+    "ubuntuImageOffer": "UbuntuServer",
+    "ubuntuImagePublisher": "Canonical",
+    "ubuntuImageSKU": "14.04.3-LTS",
+    "publicIPAddressName": "myusage",
+    "publicIPAddressNameLinux": "mylinuxusage",
+    "publicIPAddressType": "Dynamic",
+    "subnet1Name": "DMZ",
+    "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
+    "virtualNetworkName": "AsiaJEVnet",
+    "vmImageOffer": "WindowsServer",
+    "vmImagePublisher": "MicrosoftWindowsServer",
+    "vmName": "myusage",
+    "vmNamelinux": "mylinuxusage",
+    "vnetID": "[resourceId('SharedResource','Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]"
+  }
+}

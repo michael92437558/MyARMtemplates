@@ -1,0 +1,12 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "jw-sqlsvrjuleeName": {"value": "jwsqlsvrjulee"},
+    "jw-sqldbjuleeName": {"value": "jwsqldbjulee"},
+    "jw-sqlsvrjuleeAdminLogin": {"value": "julee"},
+    "jw-sqlsvrjuleeAdminLoginPassword": {"value": "Passw0rd"},
+    "jw-sqlsvrjuleeLocation": {"value": "Japan West"}
+    
+  }
+}
