@@ -7,4 +7,4 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This template allows you to create a Linux-based HDInsight cluster and the dependent Azure Storage account. The SSH authentication method for the cluster is username and password. For a template using SSH public key authentication, see https://azure.microsoft.com/resources/templates/101-hdinsight-linux-ssh-publickey/"
+This template allows you to create hundreds of VMs using multiple VMSS in a single VNET
