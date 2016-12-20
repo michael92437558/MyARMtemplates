@@ -233,7 +233,7 @@
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "[concat(variables('namingInfix'),copyIndex())]",
       "location": "[variables('location')]",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2015-06-15",
       "tags": {
         "displayName": "VMScaleSet"
       },
