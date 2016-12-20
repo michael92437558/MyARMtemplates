@@ -43,6 +43,7 @@
     <None Include="VMSS\execution.zip" />
     <None Include="VMSS\README.md" />
     <None Include="VMSS\install.ps1" />
+    <None Include="VMSS\WindowsVirtualMachineScaleSetProblem.json" />
     <None Include="VMSS\WindowsVirtualMachineScaleSet.json" />
     <None Include="VMSS\WindowsVirtualMachineScaleSet.parameters.json" />
     <None Include="WinFTPStandalonevNetTemplate.json" />
