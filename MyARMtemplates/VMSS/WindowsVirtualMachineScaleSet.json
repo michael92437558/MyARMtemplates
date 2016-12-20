@@ -80,14 +80,8 @@
       "metadata": {
         "description": "a ZIP file to be uploaded to VMSS instances"
       }
-    },
-    "ProgramURLSASkey": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "a SAS key if necessary"
-      }
     }
+    
   },
   "variables": {
         "scriptURL": "https://raw.githubusercontent.com/eissi/MyARMtemplates/master/MyARMtemplates/VMSS/install.ps1",
