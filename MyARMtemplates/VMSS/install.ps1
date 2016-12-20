@@ -12,10 +12,10 @@ if($PSVersionTable.PSVersion.Major -gt 4){
 }
 else{
 	$shell = new-object -com shell.application
-	$zip = $shell.NameSpace(¡°c:\customprograms\program.zip¡±)
+	$zip = $shell.NameSpace('c:\customprograms\program.zip')
 	foreach($item in $zip.items())
 	{
-		$shell.Namespace(¡°c:\customprograms¡±).copyhere($item)
+		$shell.Namespace("c:\customprograms").copyhere($item)
 	}
 }
 
