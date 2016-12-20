@@ -124,27 +124,12 @@
   },
   "resources": [
     {
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "[variables('virtualNetworkName')]",
-      "location": "[variables('location')]",
-      "apiVersion": "2015-06-15",
-      "tags": {
-        "displayName": "VirtualNetwork"
-      },
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "testjulee0109",
+      "apiVersion": "2005-06-15",
+      "location": "[resourceGroup().location]",
       "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[variables('addressPrefix')]"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "[variables('subnetName')]",
-            "properties": {
-              "addressPrefix": "[variables('subnetPrefix')]"
-            }
-          }
-        ]
+        "accountType": "[variables('storageAccountType')]"
       }
     }
   ]
