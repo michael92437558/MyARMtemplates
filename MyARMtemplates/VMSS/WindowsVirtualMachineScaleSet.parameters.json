@@ -17,9 +17,6 @@
         },
         "ProgramURL": {
             "value": "https://github.com/eissi/MyARMtemplates/blob/master/MyARMtemplates/VMSS/execution.zip?raw=true"
-        },
-        "ProgramURLSASkey": {
-            "value": ""
         }
     }
 }
