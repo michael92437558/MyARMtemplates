@@ -83,6 +83,7 @@
     },
     "ProgramURLSASkey": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "a SAS key if necessary"
       }
