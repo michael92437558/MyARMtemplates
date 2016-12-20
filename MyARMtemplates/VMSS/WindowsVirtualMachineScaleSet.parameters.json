@@ -10,7 +10,7 @@
             "value": "julee"
         },
         "VMSSCount": {
-            "value": 1
+            "value": 2
         },
         "adminPassword": {
             "value": "Passw0rdPassw0rd"
@@ -19,7 +19,7 @@
             "value": "https://github.com/eissi/MyARMtemplates/blob/master/MyARMtemplates/VMSS/execution.zip?raw=true"
         },
         "ProgramURLSASkey": {
-            "value": "test"
+            "value": ""
         }
     }
 }

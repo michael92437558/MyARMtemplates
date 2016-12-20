@@ -273,7 +273,7 @@
             "imageReference": "[variables('imageReference')]"
           },
           "osProfile": {
-            "computerNamePrefix": "[variables('namingInfix')]",
+            "computerNamePrefix": "[substring(concat(variables('namingInfix'),uniqueString(resourceGroup().id)),0,9)]",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
           },
@@ -309,8 +309,9 @@
           },
           "extensionProfile": {
             "extensions": [
+
               {
-                "name": "customScript",
+                "name": "201612181003",
                 "properties": {
                   "publisher": "Microsoft.Compute",
                   "settings": {
@@ -321,11 +322,12 @@
                   "typeHandlerVersion": "1.8",
                   "autoUpgradeMinorVersion": true,
                   "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File install2.ps1 ',parameters('ProgramURL'),' ',parameters('programURLSASkey'))]"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File install.ps1 ',parameters('ProgramURL'),' ',parameters('programURLSASkey'))]"
                   },
                   "type": "CustomScriptExtension"
                 }
               },
+
               {
                 "name": "AzureDiagnostics",
                 "properties": {
