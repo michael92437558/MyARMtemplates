@@ -62,7 +62,7 @@
         "description": "Number of VM instances (100 or less)"
       },
       "minValue": 1,
-      "maxValue": 200
+      "maxValue": 100
     },
     "VMSSCount": {
       "type": "int",
