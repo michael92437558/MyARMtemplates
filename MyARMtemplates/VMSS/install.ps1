@@ -1,6 +1,6 @@
 # Script.ps1
 #
-param($url,$key)
+param($url)
 
 
 
@@ -20,4 +20,3 @@ else{
 }
 
 Write-Output "URL: $url" |Out-File "c:\customprograms\arguments.txt"
-Write-Output "key: $key" |Out-File "c:\customprograms\arguments.txt" -Append
