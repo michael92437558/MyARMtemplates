@@ -3,14 +3,14 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "customVmName": {
-            "value": "testb"
+            "value": "testba"
         },
 
         "osDiskVhdUri": {
-            "value": "https://myservicesdisks750.blob.core.windows.net/vmimage/B.vhd"
+            "value": "https://myservicesdisks750.blob.core.windows.net/vmimage/A.vhd"
         },
         "dnsLabelPrefix": {
-            "value": "juleeattachbb"
+            "value": "juleeattachbba"
         },
         "adminUserName": {
             "value": "julee"
