@@ -40,6 +40,8 @@
     <None Include="MyConsoleVMs.param.json" />
     <None Include="SharedResource.json" />
     <None Include="SharedResource.param.dev.json" />
+    <None Include="VM-user-image\vm-os-attach.json" />
+    <None Include="VM-user-image\vm-os-attach.parameters.json" />
     <None Include="VMSS\execution.zip" />
     <None Include="VMSS\README.md" />
     <None Include="VMSS\install.ps1" />

@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "customVmName": {
+            "value": "testb"
+        },
+
+        "osDiskVhdUri": {
+            "value": "https://myservicesdisks750.blob.core.windows.net/vmimage/B.vhd"
+        },
+        "dnsLabelPrefix": {
+            "value": "juleeattachbb"
+        },
+        "adminUserName": {
+            "value": "julee"
+        },
+        "adminPassword": {
+            "value": "Passw0rdPassw0rd"
+        },
+        "osType": {
+            "value": "Windows"
+        },
+        "vmSize": {
+            "value": "Standard_DS1_v2"
+        },
+        "newOrExistingVnet": {
+            "value": "new"
+        },
+        "newOrExistingVnetName": {
+            "value": "test"
+        },
+        "AvailabilitySetName": {
+            "value": "test"
+        },
+        "newOrExistingSubnetName": {
+            "value": "default"
+        },
+        "existingVnetResourceGroupName": {
+            "value": "vmattachtest"
+        }
+
+
+    }
+}
