@@ -5,4 +5,7 @@
 </a>
 <a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Feissi%2FMyARMtemplates%2Fmaster%2FMyARMtemplates%2FVM-user-image%2Fvm-os-attach.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
-</a>
+</a
+
+
+test>
