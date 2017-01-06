@@ -115,10 +115,10 @@
                 "description": "Resource group of the existing VNET"
             }
         },
-  	  "AvailabilitySetName": {
-  	    "type": "string",
+  	    "AvailabilitySetName": {
+       	   "type": "string",
    	   "minLength": 1
-  	  }
+         }
     },
     "variables": {
         "publicIPAddressName": "[concat(parameters('customVmName'),'IP')]",
@@ -171,7 +171,6 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-	        "[concat('Microsoft.Compute/availabilitySets/',parameters('AvailabilitySetName'))]"
                 "Microsoft.Resources/deployments/vnet-template"
             ],
             "properties": {
@@ -198,15 +197,16 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+	        "[concat('Microsoft.Compute/availabilitySets/',parameters('AvailabilitySetName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
-                 "availabilitySet": {
-	          "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('AvailabilitySetName'))]"
-		}
-		  "osProfile": {
+	        "availabilitySet": {
+        	  "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('AvailabilitySetName'))]"
+		},
+                "osProfile": {
                     "computerName": "[variables('vmName')]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]"
