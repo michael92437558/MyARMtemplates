@@ -171,7 +171,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-	        "[concat('Microsoft.Compute/availabilitySets/',parameters('AvailabilitySetName'))]"
+	        "[concat('Microsoft.Compute/availabilitySets/',parameters('AvailabilitySetName'))]",
                 "Microsoft.Resources/deployments/vnet-template"
             ],
             "properties": {
