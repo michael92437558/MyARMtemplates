@@ -124,7 +124,7 @@
         "publicIPAddressName": "[concat(parameters('customVmName'),'IP')]",
         "vmName": "[parameters('customVmName')]",
         "nicName": "[concat(parameters('customVmName'),'Nic')]",
-        "publicIPAddressType": "Dynamic",
+        "publicIPAddressType": "Static",
         "apiVersion": "2015-06-15",
         "templatelink": "[concat('https://raw.githubusercontent.com/singhkay/azure-quickstart-templates/master/101-vm-from-user-image/',parameters('newOrExistingVnet'),'vnet.json')]"
     },
@@ -178,7 +178,7 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
+                            "privateIPAllocationMethod": "Static",
                             "publicIPAddress": {
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
                             },
