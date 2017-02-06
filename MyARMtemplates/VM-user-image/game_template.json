@@ -249,9 +249,10 @@
                 "displayName": "{MICROSOFT_COMPUTE_AVAILABILITY SETS}"
             },
             "properties": {
-                "platformUpdateDomainCount": 10,
+                "platformUpdateDomainCount": 12,
                 "platformFaultDomainCount": 3
             }
         }
     ]
 }
+
